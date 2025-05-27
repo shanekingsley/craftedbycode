@@ -20,6 +20,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Write build metadata
+      run: |
+        echo '{ "buildTime": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'", "commit": "'${{ github.sha }}'", "build": "'${{github.run_number}}'" }' > src/data/build.json
+
     - name: Build site
       run: npm run build
 
