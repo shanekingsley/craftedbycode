@@ -153,3 +153,28 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+.hero-image {
+	margin-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+  
+.hero-img {
+	width: 100%;
+	max-width: 720px;  /* ✨ Limit max width for desktops */
+	height: auto;
+	border-radius: 8px;
+	display: block;
+}
+  
+.image-credit {
+	font-size: 0.75rem;
+	text-align: right;
+	opacity: 0.6;
+	margin-top: 0.25rem;
+	width: 100%;
+	max-width: 720px;
+}
+  
