@@ -27,8 +27,6 @@ And the enigma? The humbling vessel that hosted such a revelation? A young perso
 
 Shane
 
-> And for the record, this was completely unedited by AI, every word here is mine.
-
 ---
 
 <small><em>“Don’t let anyone look down on you because you are young, but set an example for the believers...”<br/>
