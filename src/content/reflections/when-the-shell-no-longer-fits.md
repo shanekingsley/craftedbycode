@@ -54,14 +54,17 @@ So you have to stay where you are, in this scary place, exposed, soft, waiting.
 🌱  But if you can wait, if you can hold your nerve. Eventually, slowly, the new armour starts to form.
 A better, stronger ‘normal’ begins to emerge.
 
-I definately didn't notice it at first. I was still aching, still terribly tired. But bit by bit, I realised:
+I  definately didn't notice it at first. I was still aching, still terribly tired. But bit by bit, I realised:
 
 You’re not shrinking anymore, not hiding, not bracing for the next blow.
 You’re standing a little taller. Breathing a little deeper.
 
-And then it hits you:
-
-You’ve grown. Not in spite of the discomfort but because you let yourself stay in it long enough to change.
+🔥 And then it hits you:
+You’ve grown, not in spite of the pain, but because you faced it.
+You stayed in the fire  long enough to be forged, not consumed.
+And now, you’re stronger.
+Not the same. Not untouched.
+But transformed.
 
 Shane
 
