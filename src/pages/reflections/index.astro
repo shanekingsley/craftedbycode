@@ -1,15 +1,14 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
 
-const blogPosts = await getCollection('blog');
 const reflectionPosts = await getCollection('reflections');
 
-const posts = [...blogPosts, ...reflectionPosts].sort(
+const posts = [...reflectionPosts].sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
@@ -91,11 +90,9 @@ const posts = [...blogPosts, ...reflectionPosts].sort(
 	<body>
 		<Header />
 		<main>
-				<h1>Welcome 💡</h1>
-<p>I'm Shane, a software developer exploring .NET, cloud, automation, and the occasional tech rabbit hole. 
-But not everything is about code, I also share <a href="/reflections">reflections on life</a>, growth, and the quieter lessons along the way. 
-This blog is simply a space to think out loud, document what I learn, and hopefully help others in the process.</p>
-
+				<h1>Reflections ✍️</h1>
+<p>Occasionally, I step away from code and write about the messier parts of life: growth, resilience, change, and the lessons that come with it. 
+These are honest reflections, written as much for myself as anyone else, shared in case they help someone else along the way.</p>
 			<section>
 				<ul>
 					{
