@@ -4,6 +4,10 @@ on:
   push:
     branches: [ master ]  # or 'master' or whatever your default branch is
 
+concurrency:
+  group: deploy-to-s3
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
