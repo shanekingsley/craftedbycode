@@ -2,7 +2,7 @@
 title: "Welcome Back: A New Season"
 description: "A quiet return, a new home, and a fresh rhythm for 2026."
 pubDate: 2026-01-31
-heroImage: "/new-beginning.jpg"
+heroImage: "/new-beginning.png"
 ---
 
 I have been quiet here for a while. Not because I stopped caring about writing, but because life got loud in all the ways that pull your attention away from words.
