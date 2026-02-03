@@ -26,4 +26,9 @@ I am not chasing a perfect cadence. I just want to keep showing up and telling t
 
 Thanks for being here, and welcome back with me.
 
-> "See, I am doing a new thing; now it springs up, do you not perceive it?" (Isaiah 43:19)
+Shane
+
+---
+<small><em>
+"See, I am doing a new thing; now it springs up, do you not perceive it?" (Isaiah 43:19)
+</em></small>
