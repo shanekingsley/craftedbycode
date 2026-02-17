@@ -1,8 +1,25 @@
 # Crafted by code
 My first proper go at a ablog.
 
+## Deployment
 
-# Color palatte
+This site is automatically deployed to AWS S3 + CloudFront via GitHub Actions.
+
+- **Trigger**: Automatic deployment on push to `master` branch
+- **Workflow**: `.github/workflows/deploy.yml`
+- **Hosting**: AWS S3 with CloudFront CDN
+- **Build**: Astro static site generator
+
+### Manual Deployment
+
+To deploy manually:
+
+```bash
+npm run build
+aws s3 sync ./dist s3://YOUR_BUCKET_NAME --delete
+```
+
+## Color palatte
 | Color Role     | Hex     | Description                    |
 | -------------- | ------- | ------------------------------ |
 | Charcoal       | #2B2B2B | Text, UI elements              |
