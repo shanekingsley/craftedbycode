@@ -1,5 +1,5 @@
 # Crafted by code
-My first proper go at a ablog.
+My first proper go at a blog.
 
 ## Deployment
 
@@ -19,7 +19,7 @@ npm run build
 aws s3 sync ./dist s3://YOUR_BUCKET_NAME --delete
 ```
 
-## Color palatte
+## Color Palette
 | Color Role     | Hex     | Description                    |
 | -------------- | ------- | ------------------------------ |
 | Charcoal       | #2B2B2B | Text, UI elements              |
