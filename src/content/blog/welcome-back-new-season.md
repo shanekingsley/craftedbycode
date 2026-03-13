@@ -2,6 +2,7 @@
 title: "Welcome Back: A New Season"
 description: "A quiet return, a new home, and a fresh rhythm for 2026."
 pubDate: 2026-01-31
+tags: ["personal"]
 heroImage: "/new-beginning.png"
 ---
 
