@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  NODE_VERSION: "20"
+
+steps:
+  - checkout: self
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "$(NODE_VERSION)"
+    displayName: "Use Node $(NODE_VERSION)"
+
+  - script: npm ci
+    displayName: "Install dependencies"
+
+  - script: |
+      echo '{ "buildTime": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'", "commit": "'$(Build.SourceVersion)'", "buildNumber": "'$(Build.BuildNumber)'" }' > src/data/build.json
+    displayName: "Write build metadata"
+
+  - script: npm run build
+    displayName: "Build site"
+
+  - script: |
+      aws s3 sync ./dist s3://$(S3_BUCKET_NAME) --delete
+    displayName: "Sync to S3"
+    env:
+      AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+      AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+      AWS_REGION: $(AWS_REGION)
+
+  - script: |
+      aws cloudfront create-invalidation --distribution-id $(CLOUDFRONT_DISTRIBUTION_ID) --paths "/*"
+    displayName: "Invalidate CloudFront"
+    env:
+      AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+      AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+      AWS_REGION: $(AWS_REGION)
