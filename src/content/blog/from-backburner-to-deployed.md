@@ -3,7 +3,6 @@ title: "From backburner to deployed: actually built something real with AI"
 description: "I gave AI a real project instead of a toy demo — months of procrastination turned into a deployed app in hours"
 pubDate: 2026-05-14
 heroImage: "/desk_pi.png"
-draft: true
 tags: ["ai", "claude-code", "self-hosting", "personal-project", "productivity"]
 ---
 
