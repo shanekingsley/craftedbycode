@@ -10,6 +10,7 @@ const _schema = z.object({
 	heroImage: z.string().optional(),
 	imageCredit: z.string().optional(),
 	draft: z.boolean().optional().default(false),
+	tags: z.array(z.string()).optional(),
 });
 
 const blog = defineCollection({
