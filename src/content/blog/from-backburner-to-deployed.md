@@ -7,7 +7,7 @@ draft: true
 tags: ["ai", "claude-code", "self-hosting", "personal-project", "productivity"]
 ---
 
-*Six months on the backburner. Hours days to deploy. Rethinking what is possible.*
+*Six months on the backburner. Hours to deploy. Rethinking what is possible.*
 
 ---
 
@@ -91,7 +91,7 @@ I want to sit with this for a second.
 
 Getting something like this running — PostgreSQL, a proper migration system, a live API integration, Docker Compose with a correct network setup — would previously have been a meaningful weekend project. The kind of thing you'd be quietly proud of.
 
-It still is. But it took two days instead of several weekends.
+It still is. But it took two hours instead of several weekends.
 
 And it works. It's running right now. My actual financial data, updating live, accessible from any browser in the house.
 
