@@ -132,13 +132,13 @@ const previewPosts = rest.slice(0, 2);
 				gap: 1rem;
 			}
 			.blog-featured {
-				grid-row: span 2;
 				background: rgba(255,255,255,0.03);
 				border: 1px solid rgba(255,255,255,0.07);
 				border-radius: 12px; padding: 2rem;
 				display: flex; flex-direction: column; justify-content: flex-end;
 				min-height: 240px; text-decoration: none;
 			}
+			.blog-featured.has-previews { grid-row: span 2; }
 			.blog-featured:hover { border-color: rgba(45,212,191,0.3); }
 			.blog-tag {
 				display: inline-block;
@@ -263,7 +263,7 @@ const previewPosts = rest.slice(0, 2);
 				<p class="section-sub" style="margin-bottom: 1.5rem;">Writing on technology, work, and the things in between.</p>
 				<div class="blog-grid">
 					{featured && (
-						<a href={`/blog/${featured.id}/`} class="blog-featured">
+						<a href={`/blog/${featured.id}/`} class={`blog-featured${previewPosts.length > 0 ? ' has-previews' : ''}`}>
 							<span class="blog-tag">{featured.data.tags?.[0] ?? 'Post'}</span>
 							<h3>{featured.data.title}</h3>
 							<span class="post-date"><FormattedDate date={featured.data.pubDate} /></span>
