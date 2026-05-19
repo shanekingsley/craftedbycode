@@ -1,28 +1,26 @@
-data "aws_caller_identity" "current" {}
+# ---------- S3 (staging) ----------
 
-# ---------- S3 (public static website) ----------
-
-resource "aws_s3_bucket" "site" {
-  bucket = var.bucket_name
+resource "aws_s3_bucket" "staging" {
+  bucket = "staging.${var.bucket_name}"
 }
 
-resource "aws_s3_bucket_ownership_controls" "site" {
-  bucket = aws_s3_bucket.site.id
+resource "aws_s3_bucket_ownership_controls" "staging" {
+  bucket = aws_s3_bucket.staging.id
   rule {
     object_ownership = "BucketOwnerEnforced"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "site" {
-  bucket                  = aws_s3_bucket.site.id
+resource "aws_s3_bucket_public_access_block" "staging" {
+  bucket                  = aws_s3_bucket.staging.id
   block_public_acls       = false
   ignore_public_acls      = false
   block_public_policy     = false
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_website_configuration" "site" {
-  bucket = aws_s3_bucket.site.id
+resource "aws_s3_bucket_website_configuration" "staging" {
+  bucket = aws_s3_bucket.staging.id
   index_document {
     suffix = "index.html"
   }
@@ -31,8 +29,9 @@ resource "aws_s3_bucket_website_configuration" "site" {
   }
 }
 
-resource "aws_s3_bucket_policy" "site" {
-  bucket = aws_s3_bucket.site.id
+resource "aws_s3_bucket_policy" "staging" {
+  bucket     = aws_s3_bucket.staging.id
+  depends_on = [aws_s3_bucket_public_access_block.staging]
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -41,28 +40,24 @@ resource "aws_s3_bucket_policy" "site" {
         Effect    = "Allow",
         Principal = "*",
         Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.site.arn}/*"
+        Resource  = "${aws_s3_bucket.staging.arn}/*"
       }
     ]
   })
 }
 
-# ---------- CloudFront ----------
+# ---------- CloudFront (staging) ----------
 
-data "aws_cloudfront_cache_policy" "caching_optimized" {
-  name = "Managed-CachingOptimized"
-}
-
-resource "aws_cloudfront_distribution" "cdn" {
+resource "aws_cloudfront_distribution" "staging" {
   enabled             = true
   default_root_object = "index.html"
-  price_class         = "PriceClass_All"
   is_ipv6_enabled     = true
-  aliases             = [var.bucket_name, "www.${var.bucket_name}"]
+  price_class         = "PriceClass_100"
+  aliases             = ["staging.${var.bucket_name}"]
 
   origin {
-    origin_id   = "CraftedSiteOrigin"
-    domain_name = "${var.bucket_name}.s3-website.${var.aws_region}.amazonaws.com"
+    origin_id   = "StagingSiteOrigin"
+    domain_name = "${aws_s3_bucket.staging.bucket}.s3-website.${var.aws_region}.amazonaws.com"
 
     custom_origin_config {
       http_port              = 80
@@ -73,7 +68,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   default_cache_behavior {
-    target_origin_id       = "CraftedSiteOrigin"
+    target_origin_id       = "StagingSiteOrigin"
     viewer_protocol_policy = "redirect-to-https"
 
     allowed_methods = ["GET", "HEAD"]
