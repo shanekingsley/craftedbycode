@@ -8,7 +8,8 @@ const _schema = z.object({
 	pubDate: z.coerce.date(),
 	updatedDate: z.coerce.date().optional(),
 	heroImage: z.string().optional(),
-	imageCredit: z.string().optional(), 
+	imageCredit: z.string().optional(),
+	draft: z.boolean().optional().default(false),
 });
 
 const blog = defineCollection({
