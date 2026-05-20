@@ -2,10 +2,10 @@ name: Deploy to S3
 
 on:
   push:
-    branches: [ master ]  # or 'master' or whatever your default branch is
+    branches: [ master, develop ]
 
 concurrency:
-  group: deploy-to-s3
+  group: deploy-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -31,13 +31,44 @@ jobs:
     - name: Build site
       run: npm run build
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "~1.6"
+        terraform_wrapper: false
+
+    - name: Terraform Init
+      working-directory: infra
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+      run: terraform init
+
+    - name: Set deployment target
+      id: target
+      working-directory: infra
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      run: |
+        if [ "${{ github.ref_name }}" = "master" ]; then
+          echo "bucket=$(terraform output -raw bucket_name)" >> $GITHUB_OUTPUT
+          echo "distribution=$(terraform output -raw cloudfront_distribution_id)" >> $GITHUB_OUTPUT
+        else
+          echo "bucket=$(terraform output -raw staging_bucket_name)" >> $GITHUB_OUTPUT
+          echo "distribution=$(terraform output -raw staging_cloudfront_distribution_id)" >> $GITHUB_OUTPUT
+        fi
+
     - name: Sync to S3
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
-        aws s3 sync ./dist s3://${{vars.S3_BUCKET_NAME}} --delete
+        aws s3 sync ./dist s3://${{ steps.target.outputs.bucket }} --delete
 
     - name: Invalidate CloudFront cache
       if: ${{ success() }}
@@ -46,5 +77,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
       run: |
-        DISTRIBUTION_ID=EVGJO2DCIGD0F
-        aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+        aws cloudfront create-invalidation --distribution-id ${{ steps.target.outputs.distribution }} --paths "/*"

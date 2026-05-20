@@ -20,5 +20,6 @@ variable "cloudflare_api_token" {
 
 variable "cloudflare_zone_id" {
   type        = string
-  description = "Cloudflare zone ID for craftedbycode.co.uk (found on the domain overview page)"
+  default     = ""
+  description = "Cloudflare zone ID for craftedbycode.co.uk (found on the domain overview page). Required for apply, not needed for CI output reads."
 }

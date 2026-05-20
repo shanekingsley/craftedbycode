@@ -11,6 +11,12 @@ terraform {
       version = "~> 4.0"
     }
   }
+
+  backend "s3" {
+    bucket = "craftedbycode-terraform-state"
+    key    = "craftedbycode.tfstate"
+    region = "eu-west-2"
+  }
 }
 
 provider "aws" {
