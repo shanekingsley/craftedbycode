@@ -6,7 +6,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-const reflectionPosts = await getCollection('reflections');
+const reflectionPosts = await getCollection('reflections', ({ data }) => !data.draft);
 
 const posts = [...reflectionPosts].sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
