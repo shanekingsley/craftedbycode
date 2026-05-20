@@ -9,9 +9,10 @@ import { getCollection } from 'astro:content';
 const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
 const reflectionPosts = await getCollection('reflections', ({ data }) => !data.draft);
 
-const posts = [...blogPosts, ...reflectionPosts].sort(
+const allPosts = [...blogPosts, ...reflectionPosts].sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
 const [featured, ...rest] = allPosts;
 const previewPosts = rest.slice(0, 2);
 ---
