@@ -2,16 +2,16 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
-import FormattedDate from '../components/FormattedDate.astro';
 
-const blogPosts = await getCollection('blog', ({ data }) => !data.draft);
-const reflectionPosts = await getCollection('reflections', ({ data }) => !data.draft);
-
-const posts = [...blogPosts, ...reflectionPosts].sort(
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const [featured, ...rest] = allPosts;
+const previewPosts = rest.slice(0, 2);
 ---
 
 <!doctype html>
@@ -19,101 +19,316 @@ const posts = [...blogPosts, ...reflectionPosts].sort(
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 960px;
+			:global(body) {
+				background: #0d1117;
+				background-image: none;
+				color: #f0fdfa;
 			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
+
+			.hero {
+				max-width: 960px;
+				margin: 0 auto;
+				padding: 8rem 3rem 7rem;
+				position: relative;
 			}
-			ul li {
-				width: calc(50% - 1rem);
+			.hero::before {
+				content: '';
+				position: absolute; top: 0; right: -60px;
+				width: 500px; height: 500px;
+				background: radial-gradient(circle, rgba(45,212,191,0.07) 0%, transparent 70%);
+				pointer-events: none;
 			}
-			ul li * {
+			.hero-label {
+				display: inline-flex; align-items: center; gap: 0.5rem;
+				color: #2dd4bf; font-size: 0.7rem; font-weight: 700;
+				letter-spacing: 2px; text-transform: uppercase;
+				border: 1px solid rgba(45,212,191,0.25);
+				padding: 0.3rem 0.85rem; border-radius: 999px;
+				margin-bottom: 2rem;
+			}
+			.hero h1 {
+				font-size: clamp(2.4rem, 4.5vw, 3.75rem);
+				font-weight: 800; line-height: 1.08;
+				letter-spacing: -0.035em;
+				max-width: 680px;
+				margin-bottom: 1.5rem;
+				color: #f0fdfa;
+			}
+			.hero h1 em { color: #2dd4bf; font-style: normal; }
+			.hero > p {
+				font-size: 1.05rem; color: #94a3b8;
+				max-width: 500px; margin-bottom: 2.75rem;
+				line-height: 1.7;
+			}
+			.hero-actions { display: flex; gap: 0.875rem; align-items: center; flex-wrap: wrap; }
+			.btn-primary {
+				background: linear-gradient(90deg, #2dd4bf, #0f9f8a);
+				color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+				padding: 0.8rem 1.75rem; border-radius: 8px;
+				font-weight: 700; font-size: 0.9rem; text-decoration: none;
+			}
+			.btn-ghost {
+				color: #94a3b8; font-size: 0.9rem; font-weight: 500;
 				text-decoration: none;
-				transition: 0.2s ease;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
+			.btn-ghost:hover { color: #f0fdfa; }
+
+			.divider {
+				max-width: 960px; margin: 0 auto;
+				border: none; border-top: 1px solid rgba(255,255,255,0.05);
 			}
-			ul li:first-child img {
-				width: 100%;
+
+			.section-eyebrow {
+				color: #2dd4bf; font-size: 0.68rem; font-weight: 700;
+				letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.6rem;
 			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
+			.section-h2 {
+				font-size: 1.6rem; font-weight: 800;
+				letter-spacing: -0.025em; margin-bottom: 0.4rem;
+				color: #f0fdfa;
 			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
+			.section-sub { color: #64748b; font-size: 0.9rem; margin-bottom: 2.25rem; }
+
+			/* Services */
+			.services {
+				padding: 4.5rem 3rem;
+				background: linear-gradient(180deg, #0d1117 0%, #0f2027 100%);
 			}
-			ul li a {
+			.services-inner { max-width: 960px; margin: 0 auto; }
+			.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+			.service-card {
+				background: rgba(45,212,191,0.04);
+				border: 1px solid rgba(45,212,191,0.1);
+				border-radius: 10px; padding: 1.5rem 1.25rem;
+			}
+			.service-icon { font-size: 1.4rem; margin-bottom: 0.875rem; }
+			.service-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; color: #f0fdfa; }
+			.service-card p { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; margin: 0; }
+
+			/* Projects */
+			.projects { padding: 3rem; background: #0d1117; }
+			.projects-inner { max-width: 960px; margin: 0 auto; }
+			.projects-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
+			}
+			.project-card {
+				background: rgba(45,212,191,0.04);
+				border: 1px solid rgba(45,212,191,0.1);
+				border-radius: 10px; padding: 1.5rem 1.25rem;
+				text-decoration: none; display: block;
+				transition: border-color 0.2s ease;
+			}
+			.project-card:hover { border-color: rgba(45,212,191,0.3); }
+			.project-icon { font-size: 1.4rem; margin-bottom: 0.875rem; }
+			.project-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; color: #f0fdfa; }
+			.project-card p { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; margin: 0 0 0.75rem; }
+			.project-link {
+				font-size: 0.78rem; font-weight: 600;
+				color: #2dd4bf; text-decoration: none;
+			}
+
+			/* Blog preview */
+			.blog-section {
+				padding: 4.5rem 3rem;
+				background: linear-gradient(180deg, #0f2027 0%, #0d1117 100%);
+			}
+			.blog-section-inner { max-width: 960px; margin: 0 auto; }
+			.blog-grid {
+				display: grid;
+				grid-template-columns: 1.5fr 1fr;
+				grid-template-rows: auto auto;
+				gap: 1rem;
+			}
+			.blog-featured {
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.07);
+				border-radius: 12px; overflow: hidden;
+				display: flex; flex-direction: column;
+				text-decoration: none;
+			}
+			.blog-featured.has-previews { grid-row: span 2; }
+			.blog-featured:hover { border-color: rgba(45,212,191,0.3); }
+			.blog-featured-img {
+				width: 100%; height: 180px;
+				object-fit: cover; display: block; flex-shrink: 0;
+			}
+			.blog-featured-body {
+				padding: 1.25rem 1.5rem 1.5rem;
+				display: flex; flex-direction: column; justify-content: flex-end;
+				flex: 1;
+			}
+			.blog-tag {
+				display: inline-block;
+				font-size: 0.62rem; font-weight: 700; letter-spacing: 1.5px;
+				text-transform: uppercase; color: #2dd4bf; margin-bottom: 0.6rem;
+			}
+			.blog-featured h3 {
+				font-size: 1.15rem; font-weight: 800; line-height: 1.3;
+				margin-bottom: 0.4rem; color: #f0fdfa;
+			}
+			.post-date { font-size: 0.82rem; color: #64748b; }
+			.blog-small {
+				background: rgba(255,255,255,0.02);
+				border: 1px solid rgba(255,255,255,0.06);
+				border-radius: 10px; padding: 1.25rem; text-decoration: none;
 				display: block;
 			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+			.blog-small:hover { border-color: rgba(45,212,191,0.2); }
+			.blog-small h3 {
+				font-size: 0.88rem; font-weight: 700; margin-bottom: 0.3rem;
+				line-height: 1.4; color: #f0fdfa;
 			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
+			.blog-all-link {
+				display: inline-block; margin-top: 1.5rem;
+				color: #2dd4bf; font-size: 0.88rem; font-weight: 600;
+				text-decoration: none;
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			/* Contact */
+			.contact {
+				padding: 6rem 3rem;
+				background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
+				text-align: center;
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+			.contact-inner { max-width: 560px; margin: 0 auto; }
+			.contact-inner h2 {
+				font-size: 2.25rem; font-weight: 800;
+				letter-spacing: -0.03em; margin-bottom: 1rem; color: #f0fdfa;
 			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
+			.contact-inner p { color: #94a3b8; margin-bottom: 2rem; font-size: 0.95rem; line-height: 1.7; }
+			.contact-email {
+				display: inline-flex; align-items: center; gap: 0.5rem;
+				background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.3);
+				color: #2dd4bf; padding: 0.85rem 2rem; border-radius: 8px;
+				font-weight: 700; text-decoration: none; font-size: 0.9rem;
+			}
+			.contact-email:hover { background: rgba(45,212,191,0.14); color: #2dd4bf; }
+
+			/* Responsive */
+			@media (max-width: 640px) {
+				.hero { padding: 4rem 1.5rem 3.5rem; }
+				.hero::before { display: none; }
+				.services, .blog-section { padding: 3rem 1.5rem; }
+				.projects { padding: 2rem 1.5rem; }
+				.contact { padding: 4rem 1.5rem; }
+				.services-grid { grid-template-columns: 1fr; }
+				.blog-grid { grid-template-columns: 1fr; }
+				.blog-featured { grid-row: span 1; min-height: 160px; }
+				.projects-grid { grid-template-columns: 1fr; }
+				.contact-inner h2 { font-size: 1.75rem; }
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-				<h1>Welcome 💡</h1>
-<p>I'm Shane, a software developer exploring .NET, cloud, automation, and the occasional tech rabbit hole. 
-But not everything is about code, I also share <a href="/reflections">reflections on life</a>, growth, and the quieter lessons along the way. 
-This blog is simply a space to think out loud, document what I learn, and hopefully help others in the process.</p>
 
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/${post.collection ?? 'blog'}/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
+		<section class="hero">
+			<div class="hero-label">Local business · Web · AI · Consultancy</div>
+			<h1>Technology that helps<br /><em>your business grow</em></h1>
+			<p>I work with local businesses to build websites, bring in AI tools, and figure out the right tech — without the agency price tag.</p>
+			<div class="hero-actions">
+				<a href="#contact" class="btn-primary">Let's talk</a>
+				<a href="/blog/" class="btn-ghost">Read the blog →</a>
+			</div>
+		</section>
+
+		<hr class="divider" />
+
+		<section class="services" id="services">
+			<div class="services-inner">
+				<div class="section-eyebrow">What I do</div>
+				<h2 class="section-h2">Whatever the problem, let's solve it</h2>
+				<p class="section-sub">Not sure if tech can help? That's exactly what I'm here to figure out with you.</p>
+				<div class="services-grid">
+					<div class="service-card">
+						<div class="service-icon">🌐</div>
+						<h3>Web & Digital</h3>
+						<p>Websites that represent your business properly and actually convert visitors into customers.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">🤖</div>
+						<h3>AI & Automation</h3>
+						<p>Bring the right AI tools into your workflow. Save time, reduce mistakes, move faster.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">🔧</div>
+						<h3>Tech Consultancy</h3>
+						<p>Not sure what you need? I'll assess what you've got, identify the gaps, and help you act on it.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="projects">
+			<div class="projects-inner">
+				<div class="section-eyebrow">What I'm building</div>
+				<h2 class="section-h2" style="margin-bottom: 1rem;">Current work</h2>
+				<div class="projects-grid">
+					<div class="project-card">
+						<div class="project-icon">🌐</div>
+						<h3>craftedbycode.co.uk</h3>
+						<p>This site — Astro, S3/CloudFront, GitHub Actions. Also the project where AI deployed to production without asking.</p>
+						<a href="/blog/set-the-rules-before-the-ai-does/" class="project-link">Read the write-up →</a>
+					</div>
+					<div class="project-card">
+						<div class="project-icon">📊</div>
+						<h3>Finance dashboard</h3>
+						<p>A personal finance dashboard built with AI assistance — months on the backburner, shipped in a weekend.</p>
+						<a href="/blog/from-backburner-to-deployed/" class="project-link">Read the write-up →</a>
+					</div>
+					<div class="project-card">
+						<div class="project-icon">🤖</div>
+						<h3>Building with AI</h3>
+						<p>Hands-on with Claude, the Anthropic SDK, and agent tooling — applying it to real problems, not toy demos.</p>
+						<a href="/blog/" class="project-link">See the blog →</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="blog-section">
+			<div class="blog-section-inner">
+				<div class="section-eyebrow">From the blog</div>
+				<h2 class="section-h2" style="margin-bottom: 0.4rem;">Thinking out loud</h2>
+				<p class="section-sub" style="margin-bottom: 1.5rem;">Writing on technology, work, and the things in between.</p>
+				<div class="blog-grid">
+					{featured && (
+						<a href={`/blog/${featured.id}/`} class={`blog-featured${previewPosts.length > 0 ? ' has-previews' : ''}`}>
+							{featured.data.heroImage && (
+								<img class="blog-featured-img" src={featured.data.heroImage} alt="" />
+							)}
+							<div class="blog-featured-body">
+								<span class="blog-tag">{featured.data.tags?.[0] ?? 'Post'}</span>
+								<h3>{featured.data.title}</h3>
+								<span class="post-date"><FormattedDate date={featured.data.pubDate} /></span>
+							</div>
+						</a>
+					)}
+					{previewPosts.map((post) => (
+						<a href={`/blog/${post.id}/`} class="blog-small">
+							<span class="blog-tag">{post.data.tags?.[0] ?? 'Post'}</span>
+							<h3>{post.data.title}</h3>
+							<span class="post-date"><FormattedDate date={post.data.pubDate} /></span>
+						</a>
+					))}
+				</div>
+				<a href="/blog/" class="blog-all-link">All posts →</a>
+			</div>
+		</section>
+
+		<section class="contact" id="contact">
+			<div class="contact-inner">
+				<div class="section-eyebrow" style="margin-bottom: 0.75rem;">Get in touch</div>
+				<h2>Got a project in mind?</h2>
+				<p>Tell me about your business and what you're trying to achieve. No obligation, no sales pitch — just a conversation.</p>
+				<a href="mailto:shane@craftedbycode.co.uk" class="contact-email">
+					📬 shane@craftedbycode.co.uk
+				</a>
+			</div>
+		</section>
+
 		<Footer />
 	</body>
 </html>

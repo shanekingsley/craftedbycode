@@ -1,7 +1,7 @@
 {
   "name": "craftedbycode",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,9 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.0",
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.4.0",
-    "astro": "^5.8.0"
+    "@astrojs/mdx": "^5.0.6",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^6.3.6"
   }
 }
