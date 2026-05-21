@@ -108,14 +108,26 @@ const previewPosts = rest.slice(0, 2);
 			/* Projects */
 			.projects { padding: 3rem; background: #0d1117; }
 			.projects-inner { max-width: 960px; margin: 0 auto; }
-			.projects-placeholder {
-				border: 1px dashed rgba(45,212,191,0.15);
-				border-radius: 12px; padding: 2rem;
-				display: flex; align-items: center; gap: 1.5rem; color: #475569;
+			.projects-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1rem;
 			}
-			.projects-placeholder .icon { font-size: 2rem; flex-shrink: 0; }
-			.projects-placeholder h3 { font-size: 0.9rem; font-weight: 700; color: #64748b; margin-bottom: 0.25rem; }
-			.projects-placeholder p { font-size: 0.82rem; margin: 0; }
+			.project-card {
+				background: rgba(45,212,191,0.04);
+				border: 1px solid rgba(45,212,191,0.1);
+				border-radius: 10px; padding: 1.5rem 1.25rem;
+				text-decoration: none; display: block;
+				transition: border-color 0.2s ease;
+			}
+			.project-card:hover { border-color: rgba(45,212,191,0.3); }
+			.project-icon { font-size: 1.4rem; margin-bottom: 0.875rem; }
+			.project-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; color: #f0fdfa; }
+			.project-card p { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; margin: 0 0 0.75rem; }
+			.project-link {
+				font-size: 0.78rem; font-weight: 600;
+				color: #2dd4bf; text-decoration: none;
+			}
 
 			/* Blog preview */
 			.blog-section {
@@ -204,7 +216,7 @@ const previewPosts = rest.slice(0, 2);
 				.services-grid { grid-template-columns: 1fr; }
 				.blog-grid { grid-template-columns: 1fr; }
 				.blog-featured { grid-row: span 1; min-height: 160px; }
-				.projects-placeholder { flex-direction: column; text-align: center; }
+				.projects-grid { grid-template-columns: 1fr; }
 				.contact-inner h2 { font-size: 1.75rem; }
 			}
 		</style>
@@ -251,13 +263,26 @@ const previewPosts = rest.slice(0, 2);
 
 		<section class="projects">
 			<div class="projects-inner">
-				<div class="section-eyebrow">Recent work</div>
-				<h2 class="section-h2" style="margin-bottom: 1rem;">Projects</h2>
-				<div class="projects-placeholder">
-					<div class="icon">🛠️</div>
-					<div>
-						<h3>Currently taking on new projects</h3>
-						<p>First engagements in progress — case studies coming soon.</p>
+				<div class="section-eyebrow">What I'm building</div>
+				<h2 class="section-h2" style="margin-bottom: 1rem;">Current work</h2>
+				<div class="projects-grid">
+					<div class="project-card">
+						<div class="project-icon">🌐</div>
+						<h3>craftedbycode.co.uk</h3>
+						<p>This site — built with Astro, deployed to S3/CloudFront via GitHub Actions, with a Cloudflare Zero Trust staging environment.</p>
+						<span class="project-link" style="opacity: 0.5; cursor: default;">Write-up coming soon</span>
+					</div>
+					<div class="project-card">
+						<div class="project-icon">📊</div>
+						<h3>Finance dashboard</h3>
+						<p>A personal finance dashboard built with AI assistance — months on the backburner, shipped in a weekend.</p>
+						<a href="/blog/from-backburner-to-deployed/" class="project-link">Read the write-up →</a>
+					</div>
+					<div class="project-card">
+						<div class="project-icon">🤖</div>
+						<h3>Building with AI</h3>
+						<p>Hands-on with Claude, the Anthropic SDK, and agent tooling — applying it to real problems, not toy demos.</p>
+						<a href="/blog/" class="project-link">See the blog →</a>
 					</div>
 				</div>
 			</div>
