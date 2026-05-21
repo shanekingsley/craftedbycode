@@ -41,7 +41,7 @@ I had a CLAUDE.md. I had branch protection. I thought that was enough.
 
 What I hadn't done was put a hard rule in CLAUDE.md about pushing to remotes. Specifically: *never push to master, always check with me first*. That one line would have stopped this entirely. Instead I had general guidance and assumed Claude would infer the rest from context.
 
-It didn't. It can't. What feels like obvious context to you is just missing information to the AI.
+It doesn't work like that. Context doesn't travel. What's obvious to you is invisible to it.
 
 I also hadn't thought about branching strategy. Claude defaults to working on whatever branch you're on. If you don't tell it to branch, it won't. That's not surprising in hindsight but it hadn't occurred to me to set that expectation up front.
 
