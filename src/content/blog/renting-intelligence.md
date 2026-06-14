@@ -9,7 +9,7 @@ tags: ["ai", "claude", "tools", "opinion"]
 
 *Two evenings with Fable 5. By Friday, it was gone.*
 
-Anthropic released Fable 5 last week as part of their Mythos preview. I had two evenings with it before the weekend I was actually planning to use it. I gave it a few general tasks first, was genuinely impressed, then pointed it at something I cared about: a set of Copilot skills for an ATDD/BDD workflow.
+Anthropic released Fable 5 last week as part of their Mythos preview. I had two evenings with it before the weekend I was actually planning to use it. I gave it a few general tasks first, was genuinely impressed, then pointed it at something I cared about: a set of AI skills for an ATDD/BDD workflow.
 
 The plan for the weekend was to use those skills, with Fable 5, to one-shot a real project. Pure ATDD in, working application out. The skills are sitting in a repo: [shanekingsley/atdd-bdd-plugin](https://github.com/shanekingsley/atdd-bdd-plugin). They need a tidy. I didn't get the chance.
 
