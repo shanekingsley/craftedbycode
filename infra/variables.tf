@@ -20,6 +20,6 @@ variable "cloudflare_api_token" {
 
 variable "cloudflare_zone_id" {
   type        = string
-  default     = ""
-  description = "Cloudflare zone ID for craftedbycode.co.uk (found on the domain overview page). Required for apply, not needed for CI output reads."
+  default     = "876fcea7c38c553ce132283f03cf8143"
+  description = "Cloudflare zone ID for craftedbycode.co.uk (found on the domain overview page). Defaulted so plans are deterministic — an empty value would force replacement of the ACM validation records."
 }

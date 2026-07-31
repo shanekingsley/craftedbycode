@@ -49,12 +49,21 @@ resource "aws_s3_bucket_policy" "site" {
 
 # ---------- CloudFront ----------
 
+resource "aws_cloudfront_origin_access_control" "oac" {
+  name                              = "${var.bucket_name}-oac"
+  description                       = "OAC for ${var.bucket_name}"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
+  comment             = var.bucket_name
   default_root_object = "index.html"
   price_class         = "PriceClass_All"
   is_ipv6_enabled     = true

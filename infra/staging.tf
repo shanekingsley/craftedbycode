@@ -13,34 +13,28 @@ resource "aws_s3_bucket_ownership_controls" "staging" {
 
 resource "aws_s3_bucket_public_access_block" "staging" {
   bucket                  = aws_s3_bucket.staging.id
-  block_public_acls       = false
-  ignore_public_acls      = false
-  block_public_policy     = false
-  restrict_public_buckets = false
-}
-
-resource "aws_s3_bucket_website_configuration" "staging" {
-  bucket = aws_s3_bucket.staging.id
-  index_document {
-    suffix = "index.html"
-  }
-  error_document {
-    key = "404.html"
-  }
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
 }
 
 resource "aws_s3_bucket_policy" "staging" {
-  bucket     = aws_s3_bucket.staging.id
-  depends_on = [aws_s3_bucket_public_access_block.staging]
+  bucket = aws_s3_bucket.staging.id
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Sid       = "PublicReadGetObject",
+        Sid       = "AllowCloudFrontOACReadOnly",
         Effect    = "Allow",
-        Principal = "*",
+        Principal = { Service = "cloudfront.amazonaws.com" },
         Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.staging.arn}/*"
+        Resource  = "${aws_s3_bucket.staging.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.staging.id}"
+          }
+        }
       }
     ]
   })
@@ -58,13 +52,7 @@ resource "aws_cloudfront_distribution" "staging" {
   origin {
     origin_id   = "StagingSiteOrigin"
     domain_name = "${aws_s3_bucket.staging.bucket}.s3-website.${var.aws_region}.amazonaws.com"
-
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"]
-    }
+    origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
   }
 
   default_cache_behavior {
@@ -76,6 +64,11 @@ resource "aws_cloudfront_distribution" "staging" {
 
     cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
     compress        = true
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_index.arn
+    }
   }
 
   restrictions {
