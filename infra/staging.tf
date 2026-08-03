@@ -50,8 +50,8 @@ resource "aws_cloudfront_distribution" "staging" {
   aliases             = ["staging.${var.bucket_name}"]
 
   origin {
-    origin_id   = "StagingSiteOrigin"
-    domain_name = "${aws_s3_bucket.staging.bucket}.s3-website.${var.aws_region}.amazonaws.com"
+    origin_id                = "StagingSiteOrigin"
+    domain_name              = aws_s3_bucket.staging.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
   }
 
