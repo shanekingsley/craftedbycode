@@ -65,7 +65,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   comment             = var.bucket_name
   default_root_object = "index.html"
-  price_class         = "PriceClass_All"
+  price_class         = "PriceClass_100"
   is_ipv6_enabled     = true
   aliases             = [var.bucket_name, "www.${var.bucket_name}"]
 
